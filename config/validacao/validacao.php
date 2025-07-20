@@ -17,7 +17,7 @@ try {
         if (empty($nome) || empty($senha)) {
             throw new Exception("Nome ou Senha não pode ser vazio, tente novamente.");
         }
-      //$senhaCrip = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+        //$senhaCrip = password_hash($_POST['senha'], PASSWORD_DEFAULT);
         //$senhaCrip = md5($senha);
 
     }
@@ -29,16 +29,36 @@ try {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result) {
-        if ($result['status_user'] == "ativo") {
+        if ($result['status_user'] == "Ativo") {
+            $_SESSION['nome_com'] = $result['nome'];
+            $_SESSION['login_usuario'] = $result['login'];
+            $_SESSION['status'] = $result['status_user'];
+            $_SESSION['codi_usuario'] = $result['cod_usuario'];
+
             if (password_verify($senha, $result['senha'])) {
-                // Inicia a sessão com os dados do usuário
-                $_SESSION['logado'] = true;
-                $_SESSION['nome_com'] = $result['nome'];
-                $_SESSION['nome'] = $result['nome'];
-                $_SESSION['status'] = $result['status_user'];
-                // Redireciona para a página principal
-                header("location: ../mensagem/mensagem_login.php");
-                exit;
+                if ($result['alt_senha'] !== 1) {
+                    // Inicia a sessão com os dados do usuário
+                    $_SESSION['logado'] = true;
+                    $_SESSION['nome_com'] = $result['nome'];
+                    $_SESSION['login_usuario'] = $result['login'];
+                    $_SESSION['status'] = $result['status_user'];
+                    $_SESSION['codi_usuario'] = $result['cod_usuario'];
+                    $_SESSION['perfil'] = $result['perfil']; 
+                    $_SESSION['fotos'] = $result['fotos']; 
+
+                    // Redireciona para a página principal
+                   header("location: ../mensagem/mensagem_login.php");
+                    exit;
+                } else {
+                    $_SESSION['logado'] = true;
+                    $_SESSION['nome_com'] = $result['nome'];
+                    $_SESSION['login_usuario'] = $result['login'];
+                    $_SESSION['status'] = $result['status_user'];
+                    $_SESSION['codi_usuario'] = $result['cod_usuario'];
+                    header("location: ../senha_alt/alt_senha.php");
+                    exit;
+                }
+
             } else {
                 $_SESSION['aviso'] = [
                     'icon' => "error",
@@ -48,13 +68,13 @@ try {
                 echo "senha errada";
                 header("location: ../../index.php");
                 exit;
-
             }
+
         } else {
             $_SESSION['aviso'] = [
                 'icon' => "error",
                 'title' => "Usuário inativo",
-                'text' => "Usuário inativo, verifique com o Administrador do Sistema!"
+                'text' => "Usuário inativo ou bloqueado, verifique com o Administrador do Sistema!"
             ];
             header("location: ../../index.php");
             exit;

@@ -1,85 +1,125 @@
 <?php
-
 session_start();
-
 include '../../databases/conexao.php';
-
-
-
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo</title>
 </head>
 
 <body>
     <style>
-        @keyframes fadeInText {
+        /* Estilo mais moderno e suave */
+        @keyframes fadeIn {
             0% {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: translateY(20px);
             }
 
             100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
         }
 
-        .tela-branca {
+        @keyframes backgroundFade {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .welcome-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 1;
             z-index: 9999;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            transition: opacity 0.5s ease-out;
         }
 
-        .mensagem-bemvindo {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
+        .welcome-message {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
             opacity: 0;
-            animation: fadeInText 1.0s ease-out 1.0s forwards;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-subtext {
+            font-size: 1.2rem;
+            color: #34495e;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #3498db;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
-    <div class="tela-branca" id="telaBranca">
-        <span class="mensagem-bemvindo" id="mensagem"></span>
+    <div class="welcome-screen" id="welcomeScreen">
+        <span class="welcome-message" id="message"></span>
+        <span class="welcome-subtext">Estamos preparando tudo para você!</span>
+        <div class="loader"></div>
     </div>
+
     <script>
         window.onload = function () {
-            let tela = document.getElementById("telaBranca");
-            let mensagem = document.getElementById("mensagem");
+            const screen = document.getElementById("welcomeScreen");
+            const message = document.getElementById("message");
 
-            let nomeUsuario = "<?php echo $nomeUsuario = $_SESSION['nome_com']; ?>";
-            console.log(nomeUsuario)
-            mensagem.innerText = `Seja bem-vindo, ${nomeUsuario}!`;
+            // Obtém o nome do usuário da sessão
+            let nomeUsuario = "<?php echo isset($_SESSION['nome_com']) ? $_SESSION['nome_com'] : 'Usuário'; ?>";
 
-            // Após 2 segundos, remove a tela e carrega o sistema
+            // Mensagem mais calorosa e personalizada
+            message.innerText = `Olá, ${nomeUsuario}! É ótimo ter você aqui!`;
+
+            // Controle da animação de saída
             setTimeout(() => {
-                tela.style.opacity = "0";
+                screen.style.opacity = "0";
                 setTimeout(() => {
-                    tela.style.display = "none"; // Oculta a tela
-                    window.location.href = "../../public/home.php"; 
-                }, 500);
-            }, 4000);
-
+                    screen.style.display = "none";
+                    window.location.href = "../../public/home.php";
+                }, 500); // Tempo sincronizado com a transição do CSS
+            }, 4000); // 4 segundos de exibição
         };
     </script>
-
-
 </body>
 
 </html>

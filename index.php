@@ -3,6 +3,8 @@ session_start();
 
 include "api/alerta/alert_erro.php";
 
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -10,150 +12,175 @@ include "api/alerta/alert_erro.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfoStock - Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Login - InfoStock</title>
     <style>
-        /* Estilização geral */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
         body {
-            background: linear-gradient(135deg, #111827, #1f2937);
-            color: white;
-            font-family: Arial, sans-serif;
+            background: #1a2333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
             padding: 20px;
         }
 
-        /* Container do login */
         .login-container {
-            background-color: #1f2937;
-            padding: 2rem;
-            border-radius: 36px 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            background: #1a2333;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
             width: 100%;
-            max-width: 483px;
-            /* Define um tamanho máximo para evitar telas muito grandes */
+            max-width: 900px;
+            display: flex;
+            height: 500px;
         }
 
-        /* Estilização do título */
-        .login-container h2 {
-            text-align: center;
-            font-weight: bold;
-            color: #a5b4fc;
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #1a2333 0%, #2c3e50 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            color: #ffffff;
         }
 
-        /* Campos de entrada */
-        .form-control {
-            background-color: #334155;
-            color: white;
+        .left-panel h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .left-panel p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .left-panel img {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .right-panel {
+            flex: 1;
+            background: #1a2333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            color: #ffffff;
+        }
+
+        .right-panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
             border: none;
+            border-radius: 5px;
+            background: #2c3e50;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
         }
 
-        /* Placeholder dos inputs */
-        .form-control::placeholder {
-            color: #94a3b8;
+        .input-group input::placeholder {
+            color: #a0b3c5;
         }
 
-        /* Botão personalizado */
-        .btn-custom {
-            background-color: #6366f1;
-            color: white;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #a0b3c5;
         }
 
-        .btn-custom:hover {
-            background-color: #4f46e5;
+        .remember-me input {
+            margin-right: 10px;
         }
 
-        /* Links personalizados */
-        .link-custom {
-            color: #a5b4fc;
+        .forgot-password {
+            color: #3498db;
             text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: block;
         }
 
-        .link-custom:hover {
-            text-decoration: underline;
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
-        /* Texto auxiliar */
-        .text-muted {
-            color: #94a3b8 !important;
+        .login-button:hover {
+            background: #2980b9;
         }
 
-        /* 🔹 Responsividade */
-        @media (max-width: 1024px) {
-
-            /* Tablets */
-            .login-container {
-                max-width: 70%;
-            }
+        .support-text {
+            font-size: 0.8rem;
+            color: #a0b3c5;
+            text-align: center;
+            margin-top: 20px;
         }
 
-        @media (max-width: 768px) {
-
-            /* Celulares */
-            .login-container {
-                max-width: 90%;
-                padding: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            /* Telas muito pequenas */
-            .login-container {
-                padding: 1rem;
-                border-radius: 20px 8px;
-            }
-
-            .btn-custom {
-                font-size: 14px;
-                padding: 8px;
-            }
+        .sun-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ffd700;
+            font-size: 1.5rem;
         }
     </style>
 </head>
 
 <body>
-
     <div class="login-container">
-        <h2>InfoStock</h2>
-        <p class="text-center text-muted">Sistema de Gestão de Estoque</p>
-        <form action="config/validacao/validacao.php" method="POST">
-            <div class="mb-3">
-                <label class="form-label">Login</label>
+        <div class="left-panel">
+            <h1>InfoStock</h1>
+            <p>Acesso ao sistema de Estoque</p>
+            <img src="public/assets/img/logo.jpg" alt="Imagem do escritório">
+        </div>
+        <div class="right-panel">
+            <h2>Acesso ao Sistema</h2>
+            <form action="config/validacao/validacao.php" method="post">
                 <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                    <input type="text" class="form-control" name="login" placeholder="login" required>
+                    <input type="text" placeholder="Seu login" id="login" name="login" required>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Senha</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    <input type="password" class="form-control" name="senha" placeholder="••••••••" required>
+                    <input type="password" placeholder="Sua senha" id="senha" name="senha" required>
                 </div>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-                <div>
-                    <input type="checkbox" id="lembrar">
-                    <label for="lembrar" class="text-muted">Lembrar-me</label>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Lembrar-me</label>
                 </div>
-                <a href="#" class="link-custom">Esqueceu a senha?</a>
-            </div>
-            <button type="submit" class="btn btn-custom">Entrar →</button>
-        </form>
-        <p class="text-center mt-3">Não tem uma conta? <a href="#" class="link-custom">Cadastre-se</a></p>
+                <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                <button type="submit" class="login-button" id="botao">Entrar</button>
+                <p class="support-text">Precisa de ajuda? Entre em contato com o suporte técnico</p>
+            </form>
+        </div>
     </div>
-
 </body>
 
 </html>

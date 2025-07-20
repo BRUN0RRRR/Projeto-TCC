@@ -2,48 +2,94 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+    --sidebar-bg: #1f2937;
+    --sidebar-hover: #34495e;
+    --text-color: #ffffff;
+    --border-color: #969696;
+    --transition-speed: 0.3s;
+    --submenu-bg: #293846;
+    --submenu-hover: #3a4d5f;
+    --sidebar-width: 70px;
+    --sidebar-open-width: 250px;
 }
 
 body {
     display: flex;
     min-height: 100vh;
     background-color: #f4f4f4;
-    font-family: "poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
 }
 
 main {
     flex-grow: 1;
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    transition: margin-left var(--transition-speed);
+    width: calc(100% - var(--sidebar-width));
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 10px 0;
+    opacity: 0.5;
 }
 
 #sidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #1f2937;
+    background-color: var(--sidebar-bg) !important;
     height: 100vh;
-    width: 70px;
+    width: var(--sidebar-width);
     overflow: hidden;
-    transition: width 0.3s;
-    border-radius: 0px 18px 18px 0px;
-    padding: 10px;
-    min-width: 82px;
-    color: white;
+    transition: all var(--transition-speed);
+    border-radius: 0 18px 18px 0;
+    padding: 16px 5px;
+    color: var(--text-color);
     position: fixed;
     overflow-y: auto;
     z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    left: 0;
 }
 
+.sidebar-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
 #sidebar.open {
-    width: 17%;
+    width: var(--sidebar-open-width);
+}
+
+#sidebar.open+main {
+    margin-left: var(--sidebar-open-width);
+    width: calc(100% - var(--sidebar-open-width));
+}
+
+#sidebar_content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 #user {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    gap: 12px;
+    margin-bottom: 10px;
     overflow: hidden;
     white-space: nowrap;
+    padding: 0 5px;
 }
 
 #user_avatar {
@@ -51,85 +97,121 @@ main {
     height: 40px;
     object-fit: cover;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 
-#sidebar.open #user_info {
+#user_infos {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: none;
+}
+
+#sidebar.open #user_infos {
     display: block;
 }
 
 #side_items {
     list-style: none;
     padding: 0;
+    margin-bottom: auto;
+    margin-top: 10px;
 }
 
 .side-item {
+    margin-bottom: 5px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.side-item>a,
+.submenu .side-item>a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 14px;
-    cursor: pointer;
-    border-radius: 14px;
-    transition: background-color 0.3s;
+    padding: 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color var(--transition-speed);
     position: relative;
 }
 
-.side-item.active,
-.side-item:hover {
-    background-color: #34495e;
+.side-item.active>a,
+.side-item>a:hover {
+    background-color: var(--sidebar-hover);
 }
 
-.side-item a {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    color: white;
-    width: 100%;
-}
-
-.side-item i {
-    font-size: 20px;
+.side-item i:not(.submenu-arrow) {
+    font-size: 18px;
+    min-width: 20px;
+    text-align: center;
 }
 
 .item-description {
     display: none;
-    padding-left: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
 }
 
 #sidebar.open .item-description {
     display: inline;
 }
 
-#open_btn {
-    position: absolute;
-    top: 20px;
-    left: 65px;
-    background-color: #2980b9;
-    color: white;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s;
+/* Submenu styling */
+.submenu-arrow {
+    font-size: 12px !important;
+    transition: transform var(--transition-speed);
+    margin-left: auto;
+    display: none;
 }
 
-#user_infos{
-
-    margin-top: 20px;
-    margin-bottom: 1rem;
+#sidebar.open .submenu-arrow {
+    display: inline-block;
 }
 
-#sidebar.open #open_btn {
-    left: 220px;
+.has-submenu.submenu-open>a .submenu-arrow {
     transform: rotate(180deg);
 }
 
+.submenu {
+    display: none;
+    list-style: none;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height var(--transition-speed);
+    background-color: var(--submenu-bg);
+    padding: 0;
+}
+
+.has-submenu.submenu-open .submenu {
+    display: block;
+    max-height: 500px;
+}
+
+.submenu .side-item {
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+.submenu .side-item>a {
+    padding: 10px 10px 10px 45px;
+    font-size: 0.9em;
+}
+
+#sidebar:not(.open) .submenu .side-item>a {
+    padding-left: 30px;
+}
+
+.submenu .side-item>a:hover {
+    background-color: var(--submenu-hover);
+}
+
 #logout {
-    border-top: 1px solid #969696;
+    border-top: 1px solid var(--border-color);
     padding: 12px;
+    margin-top: 20px;
 }
 
 #logout_btn {
@@ -143,21 +225,132 @@ main {
     cursor: pointer;
     background-color: transparent;
     width: 100%;
-    color: white;
+    color: var(--text-color);
+    transition: background-color var(--transition-speed);
+    text-decoration: none;
 }
 
-/* Submenu */
-.submenu {
+#logout_btn:hover {
+    background-color: var(--sidebar-hover);
+}
+
+/* Mobile menu toggle button */
+#menu-toggle {
     display: none;
-    list-style: none;
-    padding-left: 20px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.side-item:hover .submenu {
-    display: block;
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    :root {
+        --sidebar-open-width: 220px;
+    }
 }
 
-/* Reset básico */
+@media (max-width: 900px) {
+    :root {
+        --sidebar-open-width: 250px;
+    }
 
+    #menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    #sidebar {
+        width: 0;
+        min-width: 0;
+        border-radius: 0;
+        left: -10px;
+    }
 
+    #sidebar.open {
+        left: 0;
+    }
+
+    main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    #sidebar.open+main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* Add overlay when sidebar is open on mobile */
+    body.sidebar-open::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --sidebar-open-width: 85%;
+    }
+
+    main {
+        padding: 15px;
+    }
+}
+
+/* Animation for smoother transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+#sidebar.open .item-description,
+#sidebar.open #user_infos,
+.has-submenu.submenu-open .submenu {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Adicionado para remover as bolinhas brancas */
+#sidebar_content>ul {
+    list-style-type: none;
+    padding-left: 0;
+    /* Remove o padding padrão da lista */
+    margin-left: 0;
+    /* Remove a margem padrão da lista */
+}
+
+#sidebar_content>ul>li.side-item {
+    /* Se necessário, pode adicionar estilos específicos aqui, mas o list-style-type: none; no UL pai deve ser suficiente */
+}
