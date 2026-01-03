@@ -24,8 +24,8 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.office365.com';  // Ex: smtp.gmail.com
     $mail->SMTPAuth = true;
-    $mail->Username = 'brunorodriguesbsr@outlook.com'; // Seu e-mail
-    $mail->Password = "arvore14";           // Sua senha
+    $mail->Username = \\; // Seu e-mail
+    $mail->Password = "|;           // Sua senha
     $mail->SMTPSecure = 'tls';                  // ou 'ssl'
     $mail->Port = 465;                    // ou 465 para SSL
 
@@ -48,5 +48,6 @@ try {
 } catch (Exception $e) {
     echo "Erro ao enviar e-mail: {$mail->ErrorInfo}";
 }
+
 
 ?>
